@@ -25,7 +25,7 @@ https://docs.docker.com/get-started/overview/
 ## What are Docker images?
 * Images are analogous to templates for containers.
 * For programmers:
-    * Images are like classes and containers are the instances of those images.
+    * Images are like classes and containers are the instances/objects of those classes.
 * For IT professionals:
     * Images are like snapshots for virtual machines.
 * Images are created by Dockerfiles.
