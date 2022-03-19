@@ -10,11 +10,12 @@ This is a demo about Docker Basics, to jump to the lesson: [DOCKER BASICS LESSON
 * A Code Editor
 * Demo will be with Linux Operating System (Ubuntu 20.04)
 
-## Basic docker commands for this demo:
+## Docker commands needed for this demo:
 
 * `docker container ls` lists all running docker containers
 * `docker container run <IMAGE_NAME>:<IMAGE_VERSION>` runs a container with a specific image
     * `-i` Keep STDIN open even if not attached
+    * `-d` Detaches; allows the container to run in the background.
     * `-t` Allocate a pseudo-TTY (which allows that container to be kept alive even without an app running)
     * `-p <HOST_PORT>:<CONTAINER_PORT>` publishes a port on the host machine to the container. Allows communications between the host machine and container on a specific port.
 * `docker container kill <CONTAINER_IDENTIFIER>` kills a docker container by specifying name or ID for a container.
@@ -23,6 +24,8 @@ This is a demo about Docker Basics, to jump to the lesson: [DOCKER BASICS LESSON
     * `-i` allows current terminal to interact with the container
 * `docker commit <CONTAINER_IDENTIFIER> <NEW_IMAGE_NAME>` saves the state of a container as a new image.
 * `docker images` list docker images on your host machine.
+* `docker build <PATH_TO_DOCKERFILE>` builds an image using a Dockerfile as a template.
+    * `-t` sets a tag (label/name) for the image built from the Dockerfile
 
 ## Python Server
 
@@ -180,7 +183,7 @@ python3 server.py
 
 The python server is running but it is in an isolated process within our container. There's no way to access it, you can check by pulling up your browser and going to `localhost:8080`.
 
-### Publishing our container
+## Publishing Ports on our Container
 
 To make our container accessible within our host machine, we have to "publish" a port on our host machine that aligns with our container. By default docker does NOT publish any ports.
 
@@ -227,7 +230,7 @@ python3 server.py
 
 8. With our ports published, our browser on our host machine should be able to reach our python app in the container.
 
-### Standardizing our process with a Dockerfile
+## Standardizing our process with a Dockerfile
 
 Commiting modifications to our containers as images are not the best practice. There are many reasons why we should use Dockerfiles instead of commiting changes to container states as new images. These reasons include:
 
@@ -237,7 +240,13 @@ Commiting modifications to our containers as images are not the best practice. T
 4. In multi-image / multi-container app environments, Dockerfiles are a lot easier to work with.
 5. Dockerfiles enable dynamic changes to our app on our host machines instead of modifying app code directly in our containers through terminal windows.
 
-### Writing our Dockerfile
+## Writing our Dockerfile
+
+FIRST Stop all your Docker process on port 8080, if there is one.
+
+```bash
+docker kill <CONTAINER_RUNNING_ON_PORT_8080>
+```
 
 Let's first create a folder that will hold our Dockerfile and our app code.
 
@@ -248,3 +257,111 @@ touch Dockerfile
 
 and make sure you move `server.py` to this folder as well.
 
+The contents of our Dockerfile will look like this:
+
+```Dockerfile
+# the FROM command allows us to build on top of a "base image".
+# it serves as a "starting point" for our container modifications.
+# building from base image ubuntu
+FROM ubuntu:latest
+
+# RUN allows us to run commands in the container terminal
+# notice these RUN commands are just simple linux commands
+# installing dependencies
+RUN apt-get update
+RUN apt install python3 -y
+
+# COPY allows us to copy files from our host to container
+# COPY <HOST_FILES> <CONTAINER_DESTINATION_PATH>
+# copying app from host to container
+COPY ./server.py /
+
+# the CMD keyword determintes what will be run when this Dockerfile is ran.
+# running these commands on `docker run` command
+CMD python3 server.py
+
+# The EXPOSE instruction does not actually publish the port. It functions as a type of documentation between the person who builds the image and the person who runs the container
+EXPOSE 8080
+```
+## Building and Running our Dockerfile
+
+### Building
+
+Once we've written our Dockerfile, we have to build this as an image that can be ran on our host machines.
+
+```bash
+cd <PATH_TO_FOLDER_THAT_HOLDS_DOCKERFILE>
+docker build . -t <CUSTOM_IMAGE_NAME>:<VERSION>
+
+# concrete example
+cd ~/Repos/teaching/docker-basics-1
+docker build . -t dockerfile_python:1
+```
+
+This runs the instructions found in our Dockerfile but does NOT run the container.
+
+It saves the image on your local machine and this can be see when we run:
+
+```bash
+docker images
+```
+
+### Running
+
+We can now run our image like so:
+
+```bash
+docker container run -p <HOST_PORT>:<CONTAINER_PORT> <CUSTOM_IMAGE_NAME>
+
+# concrete example
+docker container run -p 8080:8080 dockerfile_python:1
+```
+
+*BUT*
+
+This locks up our terminal, USE THIS command instead:
+
+```bash
+docker container run -d -p <HOST_PORT>:<CONTAINER_PORT> <CUSTOM_IMAGE_NAME>
+
+# concrete example
+docker container run -d -p 8080:8080 dockerfile_python:1
+```
+
+We can now access our python web server through our browser at `localhost:8080`.
+
+### Editing our app
+
+What do we do if we want to make edits to our application code or add new features?
+
+We can just edit our `server.py` and rebuild our docker image.
+
+Let's see this in action.
+
+Modify the HTML present in your `server.py` on the last line of the `do_GET` method in the `MyWebServer` class.
+
+Once we have our changes, let's kill our container.
+
+```bash
+docker kill <CONTAINER_RUNNING_ON_PORT_8080>
+```
+
+Let's rebuild our Dockerfile, our Dockerfile transfers over the updated `server.py` from the host to our container.
+
+```bash
+docker build . -t <CUSTOM_IMAGE_NAME>:<VERSION>
+
+# concrete example
+docker build . -t dockerfile_python:2 # notice the updated version number
+```
+
+Now run the updated build
+
+```bash
+docker container run -d -p <HOST_PORT>:<CONTAINER_PORT> <CUSTOM_IMAGE_NAME>
+
+# concrete example
+docker container run -d -p 8080:8080 dockerfile_python:2 # notice the updated version number
+```
+
+And voila! Opening `localhost:8080` will reflect the new changes.
