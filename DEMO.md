@@ -25,7 +25,7 @@ This is a demo about Docker Basics, to jump to the lesson: [DOCKER BASICS LESSON
 * `docker commit <CONTAINER_IDENTIFIER> <NEW_IMAGE_NAME>` saves the state of a container as a new image.
 * `docker images` list docker images on your host machine.
 * `docker build <PATH_TO_DOCKERFILE>` builds an image using a Dockerfile as a template.
-    * `-t` sets a tag (label/name) for the image built from the Dockerfile
+    * `-t <TAG_OF_IMAGE>` sets a tag (label/name) for the image built from the Dockerfile
 
 ## Python Server
 
