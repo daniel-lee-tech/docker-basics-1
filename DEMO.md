@@ -138,8 +138,8 @@ Let's kill this container and re-run this container.
 DO NOT USE THIS COMMAND: 
 
 ```bash
-# creates brand new container with ubuntu image
-docker container run -it ubuntu:latest
+# creates brand new container with ubuntu image without stopping automatically and making it interactive
+docker container run -t -i ubuntu:latest
 ```
 
 to start your old container, this command will create a brand new container.
