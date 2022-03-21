@@ -9,7 +9,7 @@ Docker is a tool for creating containers.
 
 Containers are isolated bundles of code, assets, and binaries to run your apps.
 
-These isolated bundles are called “images”.
+These isolated bundles can be "templated" and these templates are called “images”.
 
 For more info:
 https://docs.docker.com/get-started/overview/
