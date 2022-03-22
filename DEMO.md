@@ -129,19 +129,9 @@ If we now do:
 docker container ls
 ```
 
-we see one running container in the background.
+We should see NO running containers.
 
-We can stop this running container by doing this command:
-
-```bash
-docker container kill <CONTAINER_ID>
-## OR ####
-docker container kill <CONTAINER_NAME>
-```
-
-The `docker container kill` method can accept either an ID or NAME to kill a specific container. You can view the names or IDs of your containers by running `docker container ls`.
-
-Let's kill this container and re-run this container.
+Let's re-run this container.
 
 DO NOT USE THIS COMMAND: 
 
