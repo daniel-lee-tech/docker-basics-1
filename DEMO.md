@@ -76,6 +76,14 @@ Once we know it works on our host, we can dockerize this app so it can run anywh
 
 Containers are just instances of images. Docker has an image library that can give us pre built images. This image library can be accessed through [Docker Hub](https://hub.docker.com/).
 
+### Listing running containers
+
+First off to get things started, we need to know how to show all the running containers on our host machine. The command for that is like so:
+
+```bash
+docker container ls
+```
+
 ### Pulling an ubuntu image and running it
 
 Docker Hub has an official `ubuntu` image. We can run this container with an `ubuntu` image like so:
