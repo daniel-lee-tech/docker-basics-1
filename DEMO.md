@@ -20,6 +20,7 @@ This is a demo about Docker Basics, to jump to the lesson: [DOCKER BASICS LESSON
     * `-p <HOST_PORT>:<CONTAINER_PORT>` publishes a port on the host machine to the container. Allows communications between the host machine and container on a specific port.
 * `docker container kill <CONTAINER_IDENTIFIER>` kills a docker container by specifying name or ID for a container.
 * `docker container restart <CONTAINER_IDENTIFIER>` runs a stopped docker container.
+* `docker container attach <CONTAINER_IDENTIFIER>` attaches terminal to a container running in the background
 * `docker commit <CONTAINER_IDENTIFIER> <NEW_IMAGE_NAME>` saves the state of a container as a new image.
 * `docker images` list docker images on your host machine.
 * `docker build <PATH_TO_DOCKERFILE>` builds an image using a Dockerfile as a template.
@@ -145,6 +146,20 @@ Use this command instead (make sure the container identifier is the same one you
 ```bash
 docker container restart <CONTAINER_IDENTIFIER>
 ```
+
+You will notice that there is no change in your terminal window.
+
+What is happening is that your container is running in the background.
+
+Docker does not automatically stop your container when you run the `docker container restart` command.
+
+If you want to access the container you will use this command:
+
+```bash
+docker container attach <CONTAINER_IDENTIFIER>
+```
+
+This will allow you to interact with containers running in the background.
 
 ## Creating a python server in our container
 
