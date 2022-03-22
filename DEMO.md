@@ -19,9 +19,7 @@ This is a demo about Docker Basics, to jump to the lesson: [DOCKER BASICS LESSON
     * `-t` Allocate a pseudo-TTY (which allows that container to be kept alive even without an app running)
     * `-p <HOST_PORT>:<CONTAINER_PORT>` publishes a port on the host machine to the container. Allows communications between the host machine and container on a specific port.
 * `docker container kill <CONTAINER_IDENTIFIER>` kills a docker container by specifying name or ID for a container.
-* `docker start <CONTAINER_IDENTIFIER>` runs a stopped docker container.
-    * `-a` attaches container to current terminal
-    * `-i` allows current terminal to interact with the container
+* `docker container restart <CONTAINER_IDENTIFIER>` runs a stopped docker container.
 * `docker commit <CONTAINER_IDENTIFIER> <NEW_IMAGE_NAME>` saves the state of a container as a new image.
 * `docker images` list docker images on your host machine.
 * `docker build <PATH_TO_DOCKERFILE>` builds an image using a Dockerfile as a template.
@@ -145,7 +143,7 @@ to start your old container, this command will create a brand new container.
 Use this command instead (make sure the container identifier is the same one you used in your kill command):
 
 ```bash
-docker start <CONTAINER_IDENTIFIER>
+docker container restart <CONTAINER_IDENTIFIER>
 ```
 
 ## Creating a python server in our container
